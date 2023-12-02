@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
-	"github.com/application-research/estuary-auth/core"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/spf13/viper"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"net/http"
 	_ "net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/application-research/estuary-auth/core"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/spf13/viper"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var (
@@ -39,7 +40,7 @@ func main() {
 		panic("invalid database configuration")
 	}
 
-	dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPass + " dbname=" + dbName + " port=" + dbPort + " sslmode=prefer TimeZone=Asia/Shanghai"
+	dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPass + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable TimeZone=Asia/Shanghai"
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	sqldb, err := db.DB()
@@ -111,7 +112,12 @@ func NewAuthRouterConfig() {
 }
 
 func BasicRegisterUserHandler(c echo.Context) error {
-	result, _ := auth.NewUserAndAuthToken(0)
+	result, err := auth.NewUserAndAuthToken(0)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "saving auth token",
+		})
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"token":   result.Token,
 		"expires": result.Expiry,

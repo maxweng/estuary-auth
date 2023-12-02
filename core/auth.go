@@ -3,6 +3,10 @@ package core
 import (
 	"errors"
 	"fmt"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"go.opentelemetry.io/otel/attribute"
@@ -11,9 +15,6 @@ import (
 	"golang.org/x/xerrors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"net/http"
-	"strings"
-	"time"
 )
 
 // Authorization structures
