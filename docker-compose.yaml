@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: abc123
       POSTGRES_DB: estuary_auth
     volumes:
-      - estuary:/usr/estuary/private
+      - estuary:/var/lib/postgresql/data
 
   estuary_auth:
     image: moshihq:25000/estuary-auth
@@ -21,8 +21,6 @@ services:
       - 1313:1313
     depends_on:
       - estuary_db
-    volumes:
-      - estuary:/usr/estuary/private
 
 volumes:
   estuary:
