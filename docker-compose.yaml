@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+
+  estuary_db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: abc123
+      POSTGRES_DB: estuary_auth
+    volumes:
+      - estuary:/usr/estuary/private
+
+  estuary_auth:
+    image: moshihq:25000/estuary-auth
+    restart: always
+    ports:
+      - 1313:1313
+    depends_on:
+      - estuary_db
+    volumes:
+      - estuary:/usr/estuary/private
+
+volumes:
+  estuary:
